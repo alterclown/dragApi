@@ -13,6 +13,13 @@ namespace DragDropApi.Entities
         public int MoveItemId { get; set; }
         public string MoveTitle { get; set; }
         public int MoveItemIndexId { get; set; }
+        public int Status { get; set; }
+        [NotMapped]
+        public int TransferItemId { get; set; }
+        [NotMapped]
+        public string TransferItemTitle { get; set; }
+        [NotMapped]
+        public int TransferItemIndexId { get; set; }
 
     }
 }

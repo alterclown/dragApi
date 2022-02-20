@@ -1,8 +1,11 @@
 ﻿using DragDropApi.DragDropContext;
+using DragDropApi.Entities;
+using DragDropApi.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,7 +29,7 @@ namespace DragDropApi.Controllers
 
             try
             {
-                var response =  await _context.MoveItems.ToListAsync();
+                var response =  await _context.MoveItems.Where(x => x.Status != (int)StatusEnum.Deleted).ToListAsync();
                 if (response != null)
                 {
                     return Ok(response);
@@ -47,7 +50,34 @@ namespace DragDropApi.Controllers
         {
             try
             {
-                var response = await _context.TransferItems.ToListAsync();
+                var response = await _context.TransferItems.Where(x => x.Status != (int)StatusEnum.Deleted).ToListAsync();
+                if (response != null)
+                {
+                    return Ok(response);
+                }
+                return StatusCode(StatusCodes.Status204NoContent);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("SaveTransferItem")]
+        public async Task<IActionResult> SaveTransferItemList(List<MoveItem> moveItems)
+        {
+            try
+            {
+                 MoveItem move = new MoveItem();
+                foreach (var item in moveItems) {
+                    move.MoveTitle = item.TransferItemTitle;
+                    move.MoveItemIndexId = item.TransferItemIndexId;
+                    move.Status = item.Status;
+                }
+                var response =  _context.MoveItems.AddRangeAsync(move);
+                await _context.SaveChangesAsync();
                 if (response != null)
                 {
                     return Ok(response);

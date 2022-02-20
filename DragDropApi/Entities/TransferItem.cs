@@ -11,8 +11,9 @@ namespace DragDropApi.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonIgnore]
         public int TransferItemId { get; set; }
-        public string TransferTitle { get; set; }     
+        public string TransferItemTitle { get; set; }     
         public int TransferItemIndexId { get; set; }
+        public int Status { get; set; }
 
     }
 }
